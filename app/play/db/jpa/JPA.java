@@ -4,6 +4,7 @@ import com.typesafe.config.ConfigFactory;
 import play.Application;
 import play.Configuration;
 import play.Play;
+import play.db.MyBoneCPPlugin;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
