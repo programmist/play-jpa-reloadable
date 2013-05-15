@@ -5,7 +5,7 @@ import play.Project._
 object ApplicationBuild extends Build {
 
   val appName         = "play-jpa-reloadable"
-  val appVersion      = "1.0-SNAPSHOT"
+  val appVersion      = "1.0"
 
   val appDependencies = Seq(
     javaCore,
