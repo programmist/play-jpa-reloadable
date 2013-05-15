@@ -4,7 +4,6 @@ import com.typesafe.config.ConfigFactory;
 import play.Application;
 import play.Configuration;
 import play.Play;
-import play.db.MyBoneCPPlugin;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -138,9 +137,8 @@ public class JPA {
         for(Map.Entry<String,String> entry : props.entrySet()) {
           addValue(configMap, entry.getKey(), entry.getValue());
         }
-        Configuration newConf = new Configuration(ConfigFactory.parseMap(configMap));
 
-        dbPlugin.loadDataSource(newConf.getConfig("db.default"));
+        dbPlugin.loadDataSource(new Configuration(ConfigFactory.parseMap(configMap).getConfig("db.default")));
         jpaPlugin.resetFactories();
     }
 

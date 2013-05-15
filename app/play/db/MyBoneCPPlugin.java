@@ -1,9 +1,10 @@
 package play.db;
 
-import play.JNDI;
 import com.jolbox.bonecp.BoneCPDataSource;
-import play.*;
-import tyrex.tm.RuntimeContext;
+import play.Application;
+import play.Configuration;
+import play.Logger;
+import play.Plugin;
 
 /**
  * A Play plugin that automatically manages JPA configuration.
@@ -12,7 +13,6 @@ public class MyBoneCPPlugin extends Plugin {
 
     private final Application application;
     private BoneCPDataSource ds;
-    RuntimeContext runtimeContext;
 
     private String IN_MEMORY_JNDI = "tyrex.naming.MemoryContextFactory";
     private String IN_MEMORY_URL = "/";
@@ -62,7 +62,7 @@ public class MyBoneCPPlugin extends Plugin {
             }
 
             // Bind in JNDI
-            JNDI.getContext().rebind(config.getString("jndiName"), ds);
+            play.JNDI.getContext().rebind(config.getString("jndiName"), ds);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -86,24 +86,22 @@ public class MyBoneCPPlugin extends Plugin {
     private boolean isEmpty(String val) {
         return val == null || val.trim().isEmpty();
     }
-    
+
     private boolean isPluginDisabled() {
         String status =  application.configuration().getString("jpaplugin");
         return status != null && status.equals("disabled");
-    }   
+    }
 
     @Override
-    public boolean enabled() { 
+    public boolean enabled() {
         return !isPluginDisabled();
     }
-     
+
     public void onStop() {
         try {
             ds.close();
         } catch (Exception e) {
             Logger.debug(e.getMessage(),e);
         }
-        runtimeContext.cleanup();
-        RuntimeContext.unsetRuntimeContext();
     }
 }

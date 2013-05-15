@@ -11,7 +11,7 @@ object ApplicationBuild extends Build {
     javaCore,
     "org.hibernate" % "hibernate-entitymanager" % "4.1.7.Final",
     "tyrex" % "tyrex" % "1.0.1",
-    "com.jolbox" % "bonecp" % "0.8.0-rc1"
+    "com.jolbox" % "bonecp" % "0.7.1.RELEASE"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(

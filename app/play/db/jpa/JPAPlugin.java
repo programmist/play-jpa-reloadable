@@ -39,6 +39,7 @@ public class JPAPlugin extends Plugin {
         }
     }
 
+
     public void resetFactories() {
         emfs = new HashMap<String,EntityManagerFactory>();
         onStart();
