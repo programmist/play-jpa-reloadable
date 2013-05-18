@@ -16,15 +16,13 @@ import java.util.Map;
 public class JPAPlugin extends Plugin {
 
     private final Application application;
-    
+
     public JPAPlugin(Application application) {
         this.application = application;
     }
-    
-    // --
-    
+
     private Map<String,EntityManagerFactory> emfs = new HashMap<String,EntityManagerFactory>();
-    
+
     /**
      * Reads the configuration file and initialises required JPA EntityManagerFactories.
      */
@@ -39,30 +37,27 @@ public class JPAPlugin extends Plugin {
         }
     }
 
-
     public void resetFactories() {
         emfs = new HashMap<String,EntityManagerFactory>();
         onStart();
     }
-    
+
     private boolean isPluginDisabled() {
         String status =  application.configuration().getString("jpaplugin");
         return status != null && status.equals("disabled");
-    }   
+    }
 
     @Override
-    public boolean enabled() { 
+    public boolean enabled() {
         return !isPluginDisabled();
     }
-     
+
     public void onStop() {
-        
         for(EntityManagerFactory emf: emfs.values()) {
             emf.close();
         }
-        
     }
-    
+
     public EntityManager em(String key) {
         EntityManagerFactory emf = emfs.get(key);
         if(emf == null) {
@@ -70,5 +65,4 @@ public class JPAPlugin extends Plugin {
         }
         return emf.createEntityManager();
     }
-    
 }

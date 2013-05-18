@@ -1,5 +1,7 @@
 package play.db.jpa;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.typesafe.config.ConfigFactory;
 import play.Application;
 import play.Configuration;
@@ -9,6 +11,7 @@ import play.db.MyBoneCPPlugin;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -144,16 +147,31 @@ public class JPA {
     }
 
     private static void addValue(Map<String,Object> properties, String key, Object value) {
-        String[] paths = key.split("\\.");
-        addValue(properties, paths, value);
+        if(key.contains("\"")) {
+            List<String> paths = Lists.newArrayList();
+            for(String path : key.split("\\.\"")) {
+                if(path.endsWith("\"")) {
+                    paths.add(String.format("\"%s\"", path.substring(0,path.length()-1)));
+                } else {
+                    paths.addAll(Lists.newArrayList(path.split("\\.")));
+                }
+            }
+            addValue(properties, paths.toArray(new String[paths.size()]), value);
+        } else {
+            addValue(properties, key.split("\\."), value);
+        }
     }
 
     private static void addValue(Map<String,Object> properties, String[] paths, Object value) {
         if(paths.length > 1) {
-            addValue((Map<String,Object>)properties.get(paths[0]), Arrays.copyOfRange(paths, 1, paths.length),value);
+            Map<String,Object> nextMap = (Map<String,Object>)properties.get(paths[0]);
+            if(nextMap == null) {
+                nextMap = Maps.newHashMap();
+                properties.put(paths[0],nextMap);
+            }
+            addValue(nextMap, Arrays.copyOfRange(paths, 1, paths.length),value);
         } else {
             properties.put(paths[0],value);
         }
     }
-
 }
