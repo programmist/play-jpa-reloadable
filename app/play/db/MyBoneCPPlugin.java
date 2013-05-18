@@ -14,9 +14,6 @@ public class MyBoneCPPlugin extends Plugin {
     private final Application application;
     private BoneCPDataSource ds;
 
-    private String IN_MEMORY_JNDI = "tyrex.naming.MemoryContextFactory";
-    private String IN_MEMORY_URL = "/";
-
     public MyBoneCPPlugin(Application application) {
         this.application = application;
     }
